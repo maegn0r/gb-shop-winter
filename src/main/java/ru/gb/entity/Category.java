@@ -28,10 +28,7 @@ public class Category {
     @Column(name = "title")
     private String title;
 
-    @ManyToMany(cascade = CascadeType.MERGE)
-    @JoinTable(name = "category_product",
-            joinColumns = {@JoinColumn(name = "CATEGORY_ID", referencedColumnName = "ID")},
-            inverseJoinColumns = {@JoinColumn(name = "PRODUCT_ID", referencedColumnName = "ID")})
+    @ManyToMany(mappedBy = "categories")
     private Set<Product> products;
 
     @Version

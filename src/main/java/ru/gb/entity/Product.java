@@ -57,7 +57,10 @@ public class Product {
     @Column(name = "status")
     private Status status;
 
-    @ManyToMany(mappedBy = "products")
+    @ManyToMany(cascade = CascadeType.MERGE)
+    @JoinTable(name = "product_category",
+            joinColumns = {@JoinColumn(name = "PRODUCT_ID", referencedColumnName = "ID")},
+            inverseJoinColumns = {@JoinColumn(name = "CATEGORY_ID", referencedColumnName = "ID")})
     private Set<Category> categories;
 
     @Override
