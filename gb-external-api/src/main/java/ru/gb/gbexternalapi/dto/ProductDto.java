@@ -1,9 +1,9 @@
-package ru.gb.web.dto;
+package ru.gb.gbexternalapi.dto;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
 import com.sun.istack.NotNull;
 import lombok.*;
-import ru.gb.entity.enums.Status;
+import ru.gb.gbexternalapi.dto.enums.Status;
 
 import javax.validation.constraints.DecimalMin;
 import javax.validation.constraints.Digits;
