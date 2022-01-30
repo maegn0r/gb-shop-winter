@@ -10,11 +10,11 @@ import org.springframework.transaction.annotation.Isolation;
 import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
 import ru.gb.api.product.dto.ProductDto;
+import ru.gb.api.product.dto.enums.Status;
 import ru.gb.dao.CategoryDao;
 import ru.gb.dao.ManufacturerDao;
 import ru.gb.dao.ProductDao;
 import ru.gb.entity.Product;
-import ru.gb.entity.enums.Status;
 import ru.gb.web.dto.ProductManufacturerDto;
 import ru.gb.web.dto.mapper.ProductMapper;
 

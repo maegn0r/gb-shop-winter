@@ -3,6 +3,7 @@ package ru.gb.web.dto.mapper;
 import org.mapstruct.Context;
 import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;
+import ru.gb.api.category.dto.CategoryDto;
 import ru.gb.api.product.dto.ProductDto;
 import ru.gb.dao.CategoryDao;
 import ru.gb.dao.ManufacturerDao;
@@ -30,12 +31,15 @@ public interface ProductMapper {
         return manufacturer.getName();
     }
 
-    default Category getCategory(String category, @Context CategoryDao categoryDao) {
-        return categoryDao.findByTitle(category).orElseThrow(NoSuchElementException::new);
+    default Category getCategory(CategoryDto categoryDto, @Context CategoryDao categoryDao) {
+        return categoryDao.findById(categoryDto.getCategoryId()).orElseThrow(NoSuchElementException::new);
     }
 
-    default String getCategory(Category category) {
-        return category.getTitle();
+    default CategoryDto getCategory(Category category) {
+        return CategoryDto.builder()
+                .categoryId(category.getId())
+                .title(category.getTitle())
+                .build();
     }
 
 }
