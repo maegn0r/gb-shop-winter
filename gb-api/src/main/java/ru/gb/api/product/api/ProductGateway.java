@@ -9,7 +9,6 @@ import ru.gb.api.product.dto.ProductDto;
 import java.util.List;
 
 
-@FeignClient(url = "http://127.0.0.1:8080/internal/api/v1/product", name = "ProductGateway")
 public interface ProductGateway {
 
     @GetMapping
