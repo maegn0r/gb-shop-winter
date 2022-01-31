@@ -16,11 +16,8 @@ import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
-import ru.gb.api.category.api.CategoryGateway;
-import ru.gb.api.category.dto.CategoryDto;
 import ru.gb.api.manufacturer.api.ManufacturerGateway;
 import ru.gb.api.manufacturer.dto.ManufacturerDto;
-import ru.gb.external.api.rest.CategoryController;
 import ru.gb.external.api.rest.ManufacturerController;
 
 import java.util.ArrayList;
@@ -37,46 +34,46 @@ import static org.springframework.test.web.servlet.request.MockMvcRequestBuilder
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
 
 @ExtendWith(MockitoExtension.class)
-public class CategoryControllerMockMvcTest {
+public class ManufacturerControllerTest {
     @Mock
-    CategoryGateway categoryGateway;
+    ManufacturerGateway manufacturerGateway;
 
     @InjectMocks
-    CategoryController categoryController;
+    ManufacturerController manufacturerController;
 
     MockMvc mockMvc;
 
-    List<CategoryDto> categoryDtoList = new ArrayList<>();
+    List<ManufacturerDto> manufacturerDtoList = new ArrayList<>();
 
     @BeforeEach
     void setUp() {
-        categoryDtoList.add(new CategoryDto(1L, "TestCategory1"));
-        categoryDtoList.add(new CategoryDto(2L, "TestCategory2"));
+        manufacturerDtoList.add(new ManufacturerDto(1L, "TestManufacturer1"));
+        manufacturerDtoList.add(new ManufacturerDto(2L, "TestManufacturer2"));
 
-        mockMvc = MockMvcBuilders.standaloneSetup(categoryController).build();
+        mockMvc = MockMvcBuilders.standaloneSetup(manufacturerController).build();
     }
 
     @Test
     public void mockMvcGetManufacturerListTest() throws Exception {
 
-        given(categoryGateway.getCategoryList()).willReturn(categoryDtoList);
+        given(manufacturerGateway.getManufacturerList()).willReturn(manufacturerDtoList);
 
-        mockMvc.perform(get("/api/v1/category"))
+        mockMvc.perform(get("/api/v1/manufacturer"))
                 .andExpect(status().isOk())
                 .andExpect(content().string(containsString("id")))
                 .andExpect(jsonPath("$.[0].id").value("1"))
-                .andExpect(jsonPath("$.[0].title").value("TestCategory1"))
-                .andExpect(jsonPath("$.[1].title").value("TestCategory2"));
+                .andExpect(jsonPath("$.[0].name").value("TestManufacturer1"))
+                .andExpect(jsonPath("$.[1].name").value("TestManufacturer2"));
     }
 
     @Test
     public void createManufacturerTest() throws Exception {
-        given(categoryGateway.handlePost(any(CategoryDto.class))).willReturn(new ResponseEntity<>(HttpStatus.CREATED));
+        given(manufacturerGateway.handlePost(any(ManufacturerDto.class))).willReturn(new ResponseEntity<>(HttpStatus.CREATED));
 
-        mockMvc.perform(post("/api/v1/category")
+        mockMvc.perform(post("/api/v1/manufacturer")
                         .contentType(MediaType.APPLICATION_JSON)
                         .content("{\n" +
-                                "    \"name\": \"TestCategory3\"" +
+                                "    \"name\": \"TestManufacturer3\"" +
                                 "}"))
                 .andExpect(status().isCreated());
 
@@ -85,15 +82,15 @@ public class CategoryControllerMockMvcTest {
     @Test
     public void getManufacturerListTest() {
 
-        given(categoryGateway.getCategoryList()).willReturn(categoryDtoList);
+        given(manufacturerGateway.getManufacturerList()).willReturn(manufacturerDtoList);
 
-        List<CategoryDto> categoryDtoList = categoryController.getCategoryList();
+        List<ManufacturerDto> manufacturerList = manufacturerController.getManufacturerList();
 
-        then(categoryGateway).should().getCategoryList();
+        then(manufacturerGateway).should().getManufacturerList();
 
         assertAll(
-                () -> assertEquals(2, categoryDtoList.size(), "Size "),
-                () -> assertEquals("TestCategory1", categoryDtoList.get(0).getTitle())
+                () -> assertEquals(2, manufacturerList.size(), "Size "),
+                () -> assertEquals("TestManufacturer1", manufacturerList.get(0).getName())
         );
     }
 }
