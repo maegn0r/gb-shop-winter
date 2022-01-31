@@ -8,8 +8,6 @@ import org.springframework.transaction.annotation.Transactional;
 import ru.gb.api.manufacturer.dto.ManufacturerDto;
 import ru.gb.dao.ManufacturerDao;
 import ru.gb.entity.Manufacturer;
-import ru.gb.entity.Product;
-import ru.gb.entity.enums.Status;
 import ru.gb.web.dto.mapper.ManufacturerMapper;
 
 import java.util.List;

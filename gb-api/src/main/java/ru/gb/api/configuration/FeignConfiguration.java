@@ -6,6 +6,7 @@ import feign.optionals.OptionalDecoder;
 import feign.slf4j.Slf4jLogger;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.ObjectFactory;
+import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
 import org.springframework.boot.autoconfigure.http.HttpMessageConverters;
 import org.springframework.boot.context.properties.EnableConfigurationProperties;
 import org.springframework.cloud.openfeign.EnableFeignClients;

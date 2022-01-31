@@ -6,8 +6,8 @@ import org.springframework.data.annotation.CreatedDate;
 import org.springframework.data.annotation.LastModifiedBy;
 import org.springframework.data.annotation.LastModifiedDate;
 import org.springframework.data.jpa.domain.support.AuditingEntityListener;
+import ru.gb.api.common.enums.Status;
 import ru.gb.entity.common.InfoEntity;
-import ru.gb.entity.enums.Status;
 
 import javax.persistence.*;
 import java.math.BigDecimal;

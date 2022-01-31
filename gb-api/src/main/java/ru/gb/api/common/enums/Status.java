@@ -1,4 +1,4 @@
-package ru.gb.entity.enums;
+package ru.gb.api.common.enums;
 
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;

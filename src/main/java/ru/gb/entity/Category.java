@@ -35,9 +35,8 @@ public class Category extends InfoEntity {
     @Override
     public String toString() {
         return "Category{" +
-                "id=" + getId() +
-                ", title='" + title + '\'' +
-                ", products=" + products +
+                ", id='" + getId() +
+                ", title='" + title +
                 '}';
     }
 

@@ -23,7 +23,7 @@ public interface CategoryGateway {
 
     @PutMapping("/{categoryId}")
     ResponseEntity<?> handleUpdate(@PathVariable("categoryId") Long id,
-                                          @Validated @RequestBody CategoryDto categoryDto);
+                                   @Validated @RequestBody CategoryDto categoryDto);
 
     @DeleteMapping("/{categoryId}")
     void deleteById(@PathVariable("categoryId") Long id);
