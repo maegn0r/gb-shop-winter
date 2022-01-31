@@ -1,23 +1,31 @@
-package ru.gb.web.rest;
+package ru.gb.external.api;
 
+import org.hamcrest.Matchers;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
+import org.mockito.Mockito;
 import org.mockito.junit.jupiter.MockitoExtension;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
+import org.springframework.boot.test.mock.mockito.MockBean;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
+import org.springframework.http.ResponseEntity;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
+import ru.gb.api.manufacturer.api.ManufacturerGateway;
 import ru.gb.api.manufacturer.dto.ManufacturerDto;
-import ru.gb.service.ManufacturerService;
+import ru.gb.external.api.rest.ManufacturerController;
 
 import java.util.ArrayList;
 import java.util.List;
 
-
 import static org.hamcrest.Matchers.containsString;
-import static org.junit.jupiter.api.Assertions.*;
+import static org.junit.jupiter.api.Assertions.assertAll;
+import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.BDDMockito.given;
 import static org.mockito.BDDMockito.then;
@@ -26,9 +34,9 @@ import static org.springframework.test.web.servlet.request.MockMvcRequestBuilder
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
 
 @ExtendWith(MockitoExtension.class)
-class ManufacturerControllerTest {
+public class ManufacturerControllerMockMvcTest {
     @Mock
-    ManufacturerService manufacturerService;
+    ManufacturerGateway manufacturerGateway;
 
     @InjectMocks
     ManufacturerController manufacturerController;
@@ -39,53 +47,50 @@ class ManufacturerControllerTest {
 
     @BeforeEach
     void setUp() {
-        manufacturerDtoList.add(new ManufacturerDto(1L, "Apple"));
-        manufacturerDtoList.add(new ManufacturerDto(2L, "Microsoft"));
+        manufacturerDtoList.add(new ManufacturerDto(1L, "TestManufacturer1"));
+        manufacturerDtoList.add(new ManufacturerDto(2L, "TestManufacturer2"));
 
         mockMvc = MockMvcBuilders.standaloneSetup(manufacturerController).build();
     }
 
     @Test
     public void mockMvcGetManufacturerListTest() throws Exception {
-        // given
-        given(manufacturerService.findAll()).willReturn(manufacturerDtoList);
+
+        given(manufacturerGateway.getManufacturerList()).willReturn(manufacturerDtoList);
 
         mockMvc.perform(get("/api/v1/manufacturer"))
                 .andExpect(status().isOk())
                 .andExpect(content().string(containsString("id")))
                 .andExpect(jsonPath("$.[0].id").value("1"))
-                .andExpect(jsonPath("$.[0].name").value("Apple"))
-                .andExpect(jsonPath("$.[1].name").value("Microsoft"));
+                .andExpect(jsonPath("$.[0].name").value("TestManufacturer1"))
+                .andExpect(jsonPath("$.[1].name").value("TestManufacturer2"));
     }
 
     @Test
     public void createManufacturerTest() throws Exception {
-
-        given(manufacturerService.save(any())).willReturn(new ManufacturerDto(3L, "Microsoft"));
+        given(manufacturerGateway.handlePost(any(ManufacturerDto.class))).willReturn(new ResponseEntity<>(HttpStatus.CREATED));
 
         mockMvc.perform(post("/api/v1/manufacturer")
-                .contentType(MediaType.APPLICATION_JSON)
-                .content("{\n" +
-                        "    \"name\": \"Microsoft\"" +
-                        "}"))
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content("{\n" +
+                                "    \"name\": \"TestManufacturer3\"" +
+                                "}"))
                 .andExpect(status().isCreated());
 
     }
 
     @Test
     public void getManufacturerListTest() {
-        // given
-        given(manufacturerService.findAll()).willReturn(manufacturerDtoList);
 
-        // when
+        given(manufacturerGateway.getManufacturerList()).willReturn(manufacturerDtoList);
+
         List<ManufacturerDto> manufacturerList = manufacturerController.getManufacturerList();
 
-        // then
-        then(manufacturerService).should().findAll();
+        then(manufacturerGateway).should().getManufacturerList();
 
         assertAll(
                 () -> assertEquals(2, manufacturerList.size(), "Size "),
-                () -> assertEquals("Apple", manufacturerList.get(0).getName())
+                () -> assertEquals("TestManufacturer1", manufacturerList.get(0).getName())
         );
     }
 }

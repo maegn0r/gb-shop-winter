@@ -25,11 +25,6 @@ public class ProductController {
         return productService.findAll();
     }
 
-    @GetMapping("/info")
-    public List<ProductManufacturerDto> getInfoProductList() {
-        return productService.findAllInfo();
-    }
-
     @GetMapping("/{productId}")
     public ResponseEntity<?> getProduct(@PathVariable("productId") Long id) {
         ProductDto product;
