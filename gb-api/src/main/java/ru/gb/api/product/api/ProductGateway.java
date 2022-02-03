@@ -1,6 +1,5 @@
 package ru.gb.api.product.api;
 
-import org.springframework.cloud.openfeign.FeignClient;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
@@ -15,7 +14,7 @@ public interface ProductGateway {
     List<ProductDto> getProductList();
 
     @GetMapping("/{productId}")
-    ResponseEntity<?> getProduct(@PathVariable("productId") Long id);
+    ResponseEntity<? extends ProductDto> getProduct(@PathVariable("productId") Long id);
 
     @PostMapping
     ResponseEntity<?> handlePost(@Validated @RequestBody ProductDto productDto);

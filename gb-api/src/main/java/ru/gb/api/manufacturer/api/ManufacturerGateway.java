@@ -1,7 +1,5 @@
 package ru.gb.api.manufacturer.api;
 
-import lombok.RequiredArgsConstructor;
-import org.springframework.cloud.openfeign.FeignClient;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.annotation.Validated;
@@ -16,7 +14,7 @@ public interface ManufacturerGateway {
     List<ManufacturerDto> getManufacturerList();
 
     @GetMapping("/{manufacturerId}")
-    ResponseEntity<?> getManufacturer(@PathVariable("manufacturerId") Long id);
+    ResponseEntity<? extends ManufacturerDto> getManufacturer(@PathVariable("manufacturerId") Long id);
 
     @PostMapping
     ResponseEntity<?> handlePost(@Validated @RequestBody ManufacturerDto manufacturerDto);
@@ -26,6 +24,5 @@ public interface ManufacturerGateway {
                                           @Validated @RequestBody ManufacturerDto manufacturerDto);
 
     @DeleteMapping("/{manufacturerId}")
-    @ResponseStatus(HttpStatus.NO_CONTENT)
     void deleteById(@PathVariable("manufacturerId") Long id);
 }

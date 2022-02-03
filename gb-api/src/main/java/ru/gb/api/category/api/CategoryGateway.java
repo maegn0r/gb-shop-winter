@@ -1,7 +1,6 @@
 package ru.gb.api.category.api;
 
 
-import org.springframework.cloud.openfeign.FeignClient;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
@@ -15,7 +14,7 @@ public interface CategoryGateway {
     List<CategoryDto> getCategoryList();
 
     @GetMapping("/{categoryId}")
-    ResponseEntity<?> getCategory(@PathVariable("categoryId") Long id);
+    ResponseEntity<? extends CategoryDto> getCategory(@PathVariable("categoryId") Long id);
 
     @PostMapping
     ResponseEntity<?> handlePost(@Validated @RequestBody CategoryDto categoryDto);
