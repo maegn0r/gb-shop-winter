@@ -30,7 +30,6 @@ public class OrderService {
     private final ManufacturerDao manufacturerDao;
     private final JmsTemplate jmsTemplate;
 
-    // todo починить update
     @Transactional
     public OrderDto save(final OrderDto orderDto) {
         Order order = orderMapper.toOrder(orderDto, manufacturerDao, categoryDao);

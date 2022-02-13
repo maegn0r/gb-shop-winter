@@ -43,7 +43,7 @@ public class Order extends InfoEntity {
     @Column(name = "DELIVERY_DATE")
     private LocalDate deliveryDate;
 
-    @ManyToMany(cascade = CascadeType.MERGE)
+    @ManyToMany
     @JoinTable(
             name = "product_order",
             joinColumns = @JoinColumn(name = "order_id"),
