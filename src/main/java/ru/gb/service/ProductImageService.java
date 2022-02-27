@@ -25,6 +25,7 @@ public class ProductImageService {
             return ImageIO.read(image.getFile());
         } else {
             log.error("Image with name {} not found!", imageName);
+            // todo ДЗ - сделать наслденика FileNotFoundException -> ProductImageNotFoundException
             throw new FileNotFoundException("File " + imageName + " not found");
         }
     }
