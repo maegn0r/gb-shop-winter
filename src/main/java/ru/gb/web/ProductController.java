@@ -49,7 +49,7 @@ public class ProductController {
         } else {
             productDto = new ProductDto();
         }
-        model.addAttribute(productDto);
+        model.addAttribute("product", productDto);
         model.addAttribute("categoryList", categoryService.findAll());
         model.addAttribute("manufacturers", manufacturerService.findAll());
         return "product/product-form";
@@ -64,7 +64,7 @@ public class ProductController {
         } else {
             return "redirect:/product/all";
         }
-        model.addAttribute(productDto);
+        model.addAttribute("product", productDto);
         return "product/product-info";
     }
 

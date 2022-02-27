@@ -12,7 +12,7 @@
 </head>
 <body>
 
-<div th:replace="~{navbar :: navi(ProductList)}"/>
+<div th:replace="~{common/navbar :: navi(ProductList)}"/>
 
 <div class="container">
     <span th:if="${products.size() == 0}">Товаров нет</span>
@@ -60,9 +60,10 @@
             </tr>
             </tbody>
         </table>
+        <hr>
     </div>
 </div>
 
-<div th:replace="~{footer :: footerBlock}"/>
+<div th:replace="~{common/footer :: footerBlock}"/>
 </body>
 </html>
