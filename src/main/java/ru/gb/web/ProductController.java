@@ -34,11 +34,10 @@ public class ProductController {
     private final ProductImageService productImageService;
 
     @GetMapping("/all")
-//    @PreAuthorize("hasAuthority('product.read')")
     @PreAuthorize("hasRole('ADMIN')")
     public String getProductList(Model model) {
         model.addAttribute("products", productService.findAll());
-        return "product-list";
+        return "product/product-list";
     }
 
     @GetMapping
@@ -53,7 +52,7 @@ public class ProductController {
         model.addAttribute(productDto);
         model.addAttribute("categoryList", categoryService.findAll());
         model.addAttribute("manufacturers", manufacturerService.findAll());
-        return "product-form";
+        return "product/product-form";
     }
 
     @GetMapping("/{productId}")
@@ -66,7 +65,7 @@ public class ProductController {
             return "redirect:/product/all";
         }
         model.addAttribute(productDto);
-        return "product-info";
+        return "product/product-info";
     }
 
     // @DateTimeFormat если будут проблемы с получением даты из шаблона подставитьт эту аннотацию
