@@ -27,7 +27,7 @@ insert into account_role (name)
 values ('ROLE_ADMIN'),
        ('ROLE_USER');
 
-drop table account_role;
+-- drop table account_role;
 
 insert into role_authority (AUTHORITY_ID, ROLE_ID)
 values (1, 1),
@@ -48,10 +48,10 @@ values (1, 1),
        (15, 1),
        (16, 1);
 
-drop table role_authority;
+-- drop table role_authority;
 
 insert into user_role(USER_ID, ROLE_ID)
 values (1, 2),
        (2, 1);
 
-drop table user_role;
+-- drop table user_role;
