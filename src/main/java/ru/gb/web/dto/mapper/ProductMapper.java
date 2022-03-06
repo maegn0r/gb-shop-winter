@@ -35,7 +35,6 @@ public interface ProductMapper {
         return manufacturer.getName();
     }
 
-    // todo ДЗ - если что поменять здесь маппинг на list of ids to set of category
     default Set<Category> categoryDtoSetToCategorySet(Set<CategoryDto> categories, @Context CategoryDao categoryDao) {
         return categories.stream().map(c -> categoryDao.findByTitleAndId(c.getTitle(), c.getCategoryId())
                         .orElseThrow(
@@ -43,5 +42,4 @@ public interface ProductMapper {
                         ))
                 .collect(Collectors.toSet());
     }
-
 }

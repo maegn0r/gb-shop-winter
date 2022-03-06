@@ -15,20 +15,20 @@
 <div th:replace="~{common/navbar :: navi(ProductForm)}" />
 
 <div class="container">
-<form class="form-horizontal" th:action="@{/product}" th:object="${product}" method="post">
-    <input type="hidden" th:field="*{id}">
+<form class="form-horizontal" th:action="@{/product}" method="post">
+    <input type="hidden" th:field="*{product.id}">
     <div class="col-md-8">
         <div class="input-group mb-3">
             <span class="input-group-text" id="title">Название</span>
             <input type="text" class="form-control" aria-label="Sizing example input"
-                   aria-describedby="inputGroup-sizing-default" th:field="*{title}">
+                   aria-describedby="inputGroup-sizing-default" th:field="*{product.title}">
         </div>
     </div>
     <div class="col-md-8">
         <div class="input-group mb-3">
             <span class="input-group-text" id="cost">Цена</span>
             <input type="text" class="form-control" aria-label="Sizing example input"
-                   aria-describedby="inputGroup-sizing-default" th:field="*{cost}">
+                   aria-describedby="inputGroup-sizing-default" th:field="*{product.cost}">
         </div>
     </div>
 
@@ -36,17 +36,33 @@
         <div class="input-group mb-2">
             <span class="input-group-text" id="manufactureDate">Дата изготовления</span>
             <input type="text" class="form-date" name="strManufacture"
-                   id="strManufacture-id" th:value="*{manufactureDate}" placeholder="дд-мм-гггг">
+                   id="strManufacture-id" th:value="*{product.manufactureDate}" placeholder="дд-мм-гггг">
         </div>
     </div>
     
     <div class="col-md-8">
-        <select class="form-select" aria-label="Default select example" th:field="*{status}">
+        <select class="form-select" aria-label="Default select example" th:field="*{product.status}">
             <option th:each="statusValue : ${T(ru.gb.api.common.enums.Status).values()}"
                     th:value="${statusValue.name()}"
                     th:text="${statusValue.title}"></option>
         </select>
 
+    </div>
+    <div class="mb-3">
+        <label for="manufacturer-id" class="form-label">Изготовитель</label>
+        <select class="form-select" aria-label="Default select example" id="manufacturer-id" th:field="*{product.manufacturer}">
+            <option th:each="manufacturerValue : ${manufacturers}"
+                    th:value="${manufacturerValue.name}"
+                    th:text="${manufacturerValue.name}"></option>
+        </select>
+    </div>
+    <div class="mb-3">
+        <label for="category-id" class="form-label">Категория</label>
+        <select class="form-select" aria-label="Default select example" id="category-id" multiple="multiple" th:field="*{chosenCategories.chosenCategory}">
+            <option th:each="categoryValue : ${categoriesList}"
+                    th:value="${categoryValue.categoryId}"
+                    th:text="${categoryValue.title}"></option>
+        </select>
     </div>
 
 <!--    todo добавить сюда список категорий с множественным выбором-->
