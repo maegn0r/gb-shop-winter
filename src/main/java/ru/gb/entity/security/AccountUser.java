@@ -67,6 +67,6 @@ public class AccountUser implements UserDetails {
     @Builder.Default
     private boolean credentialsNonExpired = true;
     @Builder.Default
-    private boolean enabled = true;
+    private boolean enabled = false;
 
 }
