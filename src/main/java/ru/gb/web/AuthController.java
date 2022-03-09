@@ -4,11 +4,10 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Controller;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.*;
 import ru.gb.api.security.dto.UserDto;
 import ru.gb.service.UserService;
 
@@ -51,9 +50,24 @@ public class AuthController {
         userService.register(userDto);
         log.info("Successfully created user with username: {}", username);
         model.addAttribute("username", username);
+        model.addAttribute("secretCode", "");
         // todo ДЗ 11 - добавить подтверждение email перед конечной активацией
         // todo сделать так чтобы аккаунт был создан но находился в статусе NOT_ACTIVE и enable=false до тех пор пока не введет на сайте пароль из мейла
         return "auth/registration-confirmation";
+    }
+
+
+    @PostMapping("/account-activation")
+    public String accountActivation(@RequestParam String username,@RequestParam String secretCode, Model model){
+        boolean result = userService.checkActivateKey(username, secretCode);
+        if (!result){
+            model.addAttribute("username", username);
+            model.addAttribute("checkResult", 1);
+            model.addAttribute("secretCode", secretCode);
+            return "auth/registration-confirmation";
+        } else {
+           return "redirect:/auth/login";
+        }
     }
 
 }
