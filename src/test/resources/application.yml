@@ -13,9 +13,11 @@ gb.api:
     manufacturer-url: 'stub'
     category-url: 'stub'
     product-url: 'stub'
+    order-url: 'stub'
   connection:
     period: 3000 #Mills
     max-period: 5000 #Mills
     max-attempts: 3
     connect-timeout-millis: 10000
     read-timeout-millis: 30000
+
