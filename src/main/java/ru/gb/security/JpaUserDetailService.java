@@ -14,11 +14,11 @@ import ru.gb.dao.security.AccountUserDao;
 import ru.gb.entity.security.AccountRole;
 import ru.gb.entity.security.AccountStatus;
 import ru.gb.entity.security.AccountUser;
+import ru.gb.service.ShopMailSenderService;
 import ru.gb.service.UserService;
 import ru.gb.web.dto.mapper.UserMapper;
 
-import java.util.List;
-import java.util.Set;
+import java.util.*;
 import java.util.stream.Collectors;
 
 @Slf4j
@@ -30,6 +30,8 @@ public class JpaUserDetailService implements UserDetailsService, UserService {
     private final AccountRoleDao accountRoleDao;
     private final UserMapper userMapper;
     private final PasswordEncoder passwordEncoder;
+    private final Map<String, String> usersAwaitActivation = new HashMap<>();
+    private final ShopMailSenderService shopMailSenderService;
 
     @Override
     @Transactional(readOnly = true)
@@ -49,9 +51,12 @@ public class JpaUserDetailService implements UserDetailsService, UserService {
 
         accountUser.setRoles(Set.of(accountRole));
         accountUser.setPassword(passwordEncoder.encode(userDto.getPassword()));
-        accountUser.setStatus(AccountStatus.ACTIVE);
+        accountUser.setStatus(AccountStatus.NOT_ACTIVE);
 
         AccountUser registeredAccountUser = accountUserDao.save(accountUser);
+        usersAwaitActivation.put(accountUser.getUsername(),getRandomNumberString());
+        shopMailSenderService.sendMail(userDto.getEmail(),"Gb Shop activation code",usersAwaitActivation.get(accountUser.getUsername()));
+
 
         log.info("user with username {} was registered successfully", registeredAccountUser.getUsername());
 
@@ -89,5 +94,23 @@ public class JpaUserDetailService implements UserDetailsService, UserService {
     @Override
     public void deleteById(Long id) {
         accountUserDao.deleteById(id);
+    }
+
+    @Override
+    public boolean checkActivateKey(String username, String secretCode) {
+        if (secretCode.equals(usersAwaitActivation.get(username))){
+            AccountUser user = findByUsername(username);
+            user.setEnabled(true);
+            user.setStatus(AccountStatus.ACTIVE);
+            accountUserDao.save(user);
+            usersAwaitActivation.remove(username);
+            return true;
+        } return false;
+    }
+
+    private String getRandomNumberString (){
+        Random random = new Random();
+        int number = random.nextInt(999999);
+        return String.format("%06d", number);
     }
 }

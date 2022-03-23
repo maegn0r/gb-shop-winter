@@ -15,7 +15,19 @@
 <body>
 <div th:replace="~{common/navbar :: navi(Confirmation)}"/>
 <div class="container">
-    <h2 th:text="'Пользователь ' + ${username} +  ' успешно  зарегестирован!'"></h2>
+    <h2 th:text="'Пользователь ' + ${username} +  ' успешно зарегистрирован!'"></h2>
+    <h2 th:text="'Мы отправили Вам код подтверждения на почту, указанную Вами при регистрации аккаунта'"></h2>
+
+    <div style="padding-top: 30px" class="panel-body">
+        <form th:action="@{/auth/account-activation}" method="post" class="form-horizontal">
+            <input type="hidden" th:value="*{username}" name="username">
+            <input type="text" placeholder="Введите код здесь" class="form-control" th:value="*{secretCode}" name="secretCode">
+            <span th:if="${checkResult == 1}">Неверный код</span>
+            <div class="col-12">
+                <button class="btn btn-primary" type="submit">Ок</button>
+            </div>
+        </form>
+    </div>
     <hr>
     <p>Для входа перейдите по <a th:href="@{/auth/login}">ссылке</a></p>
 </div>

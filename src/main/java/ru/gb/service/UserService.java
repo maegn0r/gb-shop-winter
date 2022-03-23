@@ -18,4 +18,6 @@ public interface UserService {
     AccountUser findByUsername(String username);
 
     void deleteById(Long id);
+    
+    boolean checkActivateKey(String username, String secretCode);
 }

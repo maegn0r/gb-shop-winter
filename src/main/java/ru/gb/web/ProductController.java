@@ -8,10 +8,12 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 import ru.gb.api.product.dto.ProductDto;
+import ru.gb.choosen.ChosenCategoriesDto;
 import ru.gb.dao.ProductImageDao;
 import ru.gb.dao.security.AccountUserDao;
 import ru.gb.entity.Product;
 import ru.gb.entity.security.AccountUser;
+import ru.gb.exceptions.ProductImageNotFoundException;
 import ru.gb.service.CategoryService;
 import ru.gb.service.ManufacturerService;
 import ru.gb.service.ProductImageService;
@@ -21,7 +23,9 @@ import javax.imageio.ImageIO;
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.time.LocalDate;
+import java.util.HashSet;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
 @Controller
 @RequiredArgsConstructor
@@ -50,8 +54,9 @@ public class ProductController {
             productDto = new ProductDto();
         }
         model.addAttribute("product", productDto);
-        model.addAttribute("categoryList", categoryService.findAll());
+        model.addAttribute("categoriesList", categoryService.findAll());
         model.addAttribute("manufacturers", manufacturerService.findAll());
+        model.addAttribute("chosenCategories", new ChosenCategoriesDto(new HashSet<>()));
         return "product/product-form";
     }
 
@@ -71,8 +76,10 @@ public class ProductController {
     // @DateTimeFormat если будут проблемы с получением даты из шаблона подставитьт эту аннотацию
     @PostMapping
     @PreAuthorize("hasAnyAuthority('product.create', 'product.update')")
-    public String saveProduct(ProductDto productDto) {
-        productService.save(productDto);
+    public String saveProduct(@ModelAttribute ProductDto product, @ModelAttribute ChosenCategoriesDto chosenCategoriesDto) {
+        product.setCategories(chosenCategoriesDto.getChosenCategory().stream().map(categoryService::findById).collect(Collectors.toSet()));
+        product.setManufactureDate(LocalDate.now());
+        productService.save(product);
         return "redirect:/product/all";
     }
 
@@ -85,14 +92,18 @@ public class ProductController {
 
     // todo ДЗ* - сделать поддержку множества картинок для для страницы подробной информации с продуктами
     @GetMapping(value = "images/{id}", produces = MediaType.IMAGE_PNG_VALUE)
+    @ResponseBody
     public byte[] getImage(@PathVariable Long id) throws IOException {
         try {
             ByteArrayOutputStream byteArrayOutputStream = new ByteArrayOutputStream();
             ImageIO.write(productImageService.loadFileAsResource(id), "png", byteArrayOutputStream);
             return byteArrayOutputStream.toByteArray();
         } catch (IOException e) {
-            throw e; // todo ДЗ - заменить на ProductImageNotFoundException
+            if (e instanceof ProductImageNotFoundException){
+                throw new ProductImageNotFoundException("For product with ID ="+ id +" "+ e.getMessage());
+            } else {
+                throw e;
+            }
         }
     }
-
 }

@@ -47,10 +47,10 @@ values (1, 1),
        (15, 1),
        (16, 1);
 
-drop table role_authority;
+-- drop table role_authority;
 
 insert into user_role(USER_ID, ROLE_ID)
 values (1, 2),
        (2, 1);
 
-select * from user_role;
+-- drop table user_role;
