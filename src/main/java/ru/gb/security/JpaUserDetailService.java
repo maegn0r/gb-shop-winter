@@ -9,6 +9,8 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import ru.gb.api.security.dto.UserDto;
+import ru.gb.common.builders.MailMessageBuilder;
+import ru.gb.common.pojo.MailMessage;
 import ru.gb.dao.security.AccountRoleDao;
 import ru.gb.dao.security.AccountUserDao;
 import ru.gb.entity.security.AccountRole;
@@ -55,7 +57,11 @@ public class JpaUserDetailService implements UserDetailsService, UserService {
 
         AccountUser registeredAccountUser = accountUserDao.save(accountUser);
         usersAwaitActivation.put(accountUser.getUsername(),getRandomNumberString());
-        shopMailSenderService.sendMail(userDto.getEmail(),"Gb Shop activation code",usersAwaitActivation.get(accountUser.getUsername()));
+        shopMailSenderService.sendMail(new MailMessageBuilder()
+                        .to(userDto.getEmail())
+                        .subject("Gb Shop activation code")
+                        .text(usersAwaitActivation.get(accountUser.getUsername()))
+                        .build());
 
 
         log.info("user with username {} was registered successfully", registeredAccountUser.getUsername());
