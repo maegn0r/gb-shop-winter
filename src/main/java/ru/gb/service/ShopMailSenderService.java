@@ -4,18 +4,23 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.mail.SimpleMailMessage;
 import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.stereotype.Component;
+import ru.gb.common.pojo.MailMessage;
 
 @Component
 @RequiredArgsConstructor
 public class ShopMailSenderService {
     private final JavaMailSender javaMailSender;
 
-    public void sendMail(String to, String subject, String text){
+    public void sendMail(MailMessage mailMessage){
         SimpleMailMessage mail = new SimpleMailMessage();
-        mail.setFrom("novitsky.mail.shop.geek@gmail.com");
-        mail.setTo(to);
-        mail.setSubject(subject);
-        mail.setText(text);
+        mail.setFrom(mailMessage.getFrom());
+        mail.setReplyTo(mailMessage.getReplyTo());
+        mail.setTo(mailMessage.getTo());
+        mail.setCc(mailMessage.getCc());
+        mail.setBcc(mailMessage.getBcc());
+        mail.setSentDate(mailMessage.getSentDate());
+        mail.setSubject(mailMessage.getSubject());
+        mail.setText(mailMessage.getText());
         javaMailSender.send(mail);
     }
 }
