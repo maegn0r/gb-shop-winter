@@ -13,7 +13,7 @@ import ru.gb.api.common.enums.Status;
 import ru.gb.api.product.dto.ProductDto;
 import ru.gb.dao.CategoryDao;
 import ru.gb.dao.ManufacturerDao;
-import ru.gb.dao.ProductDao;
+import ru.gb.dao.ProductDaoProxy;
 import ru.gb.entity.Product;
 import ru.gb.web.dto.ProductManufacturerDto;
 import ru.gb.web.dto.mapper.ProductMapper;
@@ -26,7 +26,7 @@ import java.util.stream.Collectors;
 @RequiredArgsConstructor
 @Slf4j
 public class ProductService {
-    private final ProductDao productDao;
+    private final ProductDaoProxy productDao;
     private final ManufacturerDao manufacturerDao;
     private final CategoryDao categoryDao;
     private final ProductMapper productMapper;
