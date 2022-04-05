@@ -30,11 +30,11 @@ public class Product extends InfoEntity {
     private BigDecimal cost;
     @Column(name = "manufacture_date")
     private LocalDate manufactureDate;
-    @ManyToOne
+    @ManyToOne(fetch = FetchType.EAGER)
     @JoinColumn(name = "manufacturer_id")
     private Manufacturer manufacturer;
 
-    @ManyToMany(cascade = CascadeType.MERGE)
+    @ManyToMany(cascade = CascadeType.MERGE,fetch = FetchType.EAGER)
     @JoinTable(
             name = "product_category",
             joinColumns = @JoinColumn(name = "product_id"),
