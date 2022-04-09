@@ -2,6 +2,7 @@ package ru.gb.security;
 
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.jms.core.JmsTemplate;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
@@ -9,11 +10,13 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import ru.gb.api.security.dto.UserDto;
+import ru.gb.config.JmsConfig;
 import ru.gb.dao.security.AccountRoleDao;
 import ru.gb.dao.security.AccountUserDao;
 import ru.gb.entity.security.AccountRole;
 import ru.gb.entity.security.AccountStatus;
 import ru.gb.entity.security.AccountUser;
+import ru.gb.pojo.RegisterMessage;
 import ru.gb.service.ShopMailSenderService;
 import ru.gb.service.UserService;
 import ru.gb.web.dto.mapper.UserMapper;
@@ -31,7 +34,7 @@ public class JpaUserDetailService implements UserDetailsService, UserService {
     private final UserMapper userMapper;
     private final PasswordEncoder passwordEncoder;
     private final Map<String, String> usersAwaitActivation = new HashMap<>();
-    private final ShopMailSenderService shopMailSenderService;
+    private final JmsTemplate jmsTemplate;
 
     @Override
     @Transactional(readOnly = true)
@@ -55,7 +58,7 @@ public class JpaUserDetailService implements UserDetailsService, UserService {
 
         AccountUser registeredAccountUser = accountUserDao.save(accountUser);
         usersAwaitActivation.put(accountUser.getUsername(),getRandomNumberString());
-        shopMailSenderService.sendMail(userDto.getEmail(),"Gb Shop activation code",usersAwaitActivation.get(accountUser.getUsername()));
+        jmsTemplate.convertAndSend(JmsConfig.USER_REGISTER, new RegisterMessage(userDto.getEmail(), "Gb Shop activation code", usersAwaitActivation.get(accountUser.getUsername())));
 
 
         log.info("user with username {} was registered successfully", registeredAccountUser.getUsername());

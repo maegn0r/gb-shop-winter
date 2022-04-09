@@ -10,6 +10,7 @@ import org.springframework.jms.support.converter.MessageType;
 public class JmsConfig {
 
     public static final String ORDER_CHANGED = "order-changed";
+    public static final String USER_REGISTER = "user-register";
 
     @Bean
     public MessageConverter messageConverter() {
