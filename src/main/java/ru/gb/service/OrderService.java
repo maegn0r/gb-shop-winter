@@ -16,6 +16,7 @@ import ru.gb.dao.OrderDao;
 import ru.gb.entity.Order;
 import ru.gb.web.dto.mapper.OrderMapper;
 
+import java.util.HashMap;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -29,10 +30,11 @@ public class OrderService {
     private final CategoryDao categoryDao;
     private final ManufacturerDao manufacturerDao;
     private final JmsTemplate jmsTemplate;
+    private HashMap<Long,Order> identityHashMap = new HashMap<>();
 
     @Transactional
     public OrderDto save(final OrderDto orderDto) {
-        Order order = orderMapper.toOrder(orderDto, manufacturerDao, categoryDao);
+        Order order = orderMapper.toOrder(orderDto, manufacturerDao, categoryDao); //здесь реализован mapper
         if (order.getId() != null) {
             orderDao.findById(orderDto.getId()).ifPresent(
                     (p) -> order.setVersion(p.getVersion())
@@ -61,4 +63,16 @@ public class OrderService {
             log.error(e.getMessage());
         }
     }
+
+    public void updateOrderStatus (Long orderId, OrderStatus status){
+        Order order = identityHashMap.get(orderId);
+        if (order == null){
+            order = orderDao.findById(orderId).get();
+        }
+        order.setStatus(status);
+        orderDao.save(order);
+        identityHashMap.put(orderId,order);
+    }
+
+
 }
